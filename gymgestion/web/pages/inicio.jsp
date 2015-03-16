@@ -125,7 +125,11 @@
                                                         out.print("Acabada");
                                                     }
                                                 %>
-                                                <a href="../Logica?rrIdPersona=<%= perActual.getIdPersona()%>&rrIdEspacio=<%= e.getIdEspacio()%>&op=ins"><button class="btn btn-info">Inscribirme</button></a>
+                                                <a href="../Logica?rrIdPersona=<%= perActual.getIdPersona()%>&rrIdEspacio=<%= e.getIdEspacio()%>&rrCupos=<%= e.getNumeroCupos()%>&op=ins">
+                                                    <button class="btn btn-info">
+                                                        Inscribirme
+                                                    </button>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>

@@ -43,35 +43,42 @@ public class Logica extends HttpServlet {
         ReservaDao rdao = new ReservaDao();
 
         /**
-         * Realizar una reserva en base a un espacio (7) días de anticipación
-         * Cero (0) reservas hechas
+         * Cero (0) reservas hechas Cupo disponible reserva en base a un espacio
+         * (7) días de anticipación
          */
         if (request.getParameter("op") != null && request.getParameter("op").equals("ins")) {
             int tempIdPersona = Integer.parseInt(request.getParameter("rrIdPersona"));
             int tempIdEspacio = Integer.parseInt(request.getParameter("rrIdEspacio"));
+            int tempCupos = Integer.parseInt(request.getParameter("rrCupos"));
             String salida;
 
-            //Validar no tener reservas
+            //Validar no tener reservas (primero)
             if (rdao.validarNumeroReservasPorPersona(tempIdPersona)) {
-                //Validar la anticipación Segundo
-                if (edao.validarFechaDeAnticipacion(tempIdEspacio)) {
-                    ReservaDto nReserva = new ReservaDto();
-                    nReserva.setIdEspacio(tempIdEspacio);
-                    nReserva.setIdPersona(tempIdPersona);
-                    nReserva.setEstado(1);
+                //validar que el espacio tenca cupo (segundo)
+                if (rdao.validarCupoDisponible(tempIdEspacio, tempCupos)) {
+                    //Validar la anticipación (tercero)
+                    if (edao.validarFechaDeAnticipacion(tempIdEspacio)) {
+                        ReservaDto nReserva = new ReservaDto();
+                        nReserva.setIdEspacio(tempIdEspacio);
+                        nReserva.setIdPersona(tempIdPersona);
+                        nReserva.setEstado(1);
 
-                    salida = rdao.insertReserva(nReserva);
+                        salida = rdao.insertReserva(nReserva);
 
-                    if (salida.equals("ok")) {
-                        response.sendRedirect("pages/inicio.jsp?msg=<strong><i class='glyphicon glyphicon-ok'></i> ¡Registro Éxitoso!</strong> La inscripción se realizó correctamente.&tipoAlert=success");
-                    } else if (salida.equals("okno")) {
-                        response.sendRedirect("pages/inicio.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Algo salió mal!</strong> Por favor intentelo de nuevo.&tipoAlert=warning");
+                        if (salida.equals("ok")) {
+                            response.sendRedirect("pages/inicio.jsp?msg=<strong><i class='glyphicon glyphicon-ok'></i> ¡Registro Éxitoso!</strong> La inscripción se realizó correctamente.&tipoAlert=success");
+                        } else if (salida.equals("okno")) {
+                            response.sendRedirect("pages/inicio.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Algo salió mal!</strong> Por favor intentelo de nuevo.&tipoAlert=warning");
+                        } else {
+                            response.sendRedirect("pages/inicio.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Ocurrió un error!</strong> Detalle: " + salida + "&tipoAlert=danger");
+                        }
                     } else {
-                        response.sendRedirect("pages/inicio.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Ocurrió un error!</strong> Detalle: " + salida + "&tipoAlert=danger");
+                        //La fecha para poder hacer la reserva ya pasó
+                        response.sendRedirect("pages/inicio.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Fecha Expedida!</strong> La fecha de inscripción ya expidió.&tipoAlert=danger");
                     }
                 } else {
                     //La fecha para poder hacer la reserva ya pasó
-                    response.sendRedirect("pages/inicio.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Fecha Expedida!</strong> La fecha de inscripción ya expidió.&tipoAlert=danger");
+                    response.sendRedirect("pages/inicio.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Cupos Llenos!</strong> El espacio ya está lleno.&tipoAlert=danger");
                 }
             } else {
                 //No tiene cupo para poder reservas

@@ -85,5 +85,5 @@ public class EspacioDao {
             mensaje = "Error, detalle " + sqle.getMessage();
         }
         return poder;
-    }
+    }        
 }

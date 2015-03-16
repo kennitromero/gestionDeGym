@@ -1,0 +1,23 @@
+Reglas de negocio que se tuvieron en cuenta:
+- Una persona no puede tener m�s de un espacio reservado.
+- Los espacios tienen unos cupos predeterminados, no se podr� reservas cuando el cupo est� lleno.
+- No se puede reservas un espacio si no sea hace la solicitud 7 días antes de la apertura del espacio. 
+
+
+Contar cu�ntos personas tiene un espacio.
+
+Tablas
+- Espacios
+- Reservas
+SELECT count(idPersona) as CantidadInscritos FROM reservas WHERE idEspacio = ?
+
+Consultar si la persona ya est� dentro de la reserva
+- Reservas
+SELECT count(idPersona) as Cantidad FROM `reservas` WHERE idReserva = ? AND idPersona = ?
+
+
+Correos de sesiones
+solucionaticos@gmail.com
+alyssa-luna@hotmail.com
+raranda3@misena.edu.co
+adrewjared@gmail.com

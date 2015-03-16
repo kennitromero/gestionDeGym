@@ -119,6 +119,7 @@ public class ReservaDao {
         return poder;
     }
     
+    
     public String cambiarEstado(int idReserva, int nuevoEstado) {        
         try {            
             String sqlInsert = "UPDATE `reservas` SET `Estado` = ? WHERE `idReserva` = ?";
@@ -139,4 +140,27 @@ public class ReservaDao {
         }
         return mensaje;
     }
+    
+    public boolean validarCupoDisponible(int idEspacio, int cuposEspacio) {
+        boolean poder = false;
+        try {
+            int resultado = 0;            
+            String sqlInsert = "SELECT count(idPersona) as CantidadInscritos FROM reservas WHERE idEspacio = ? AND Estado = 1";
+            pstm = miCon.prepareStatement(sqlInsert);
+
+            pstm.setInt(1, idEspacio);
+            rs = pstm.executeQuery();
+
+            while (rs.next()) {
+                resultado = rs.getInt("CantidadInscritos");
+            }
+            
+            if (resultado < cuposEspacio) {
+                poder = true;
+            }
+        } catch (SQLException sqle) {
+            mensaje = "Error, detalle " + sqle.getMessage();
+        }
+        return poder;
+    }    
 }

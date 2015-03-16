@@ -30,9 +30,11 @@ public class PruebaConexion {
             System.out.println("Error");
         }
         
-        System.out.println("-----------------------------------------------");
-        
+        EspacioDao edao = new EspacioDao();
         ReservaDao rdao = new ReservaDao();
+        
+        System.out.println("-----------------------------------------------");
+                
         ArrayList<ReservaDto> listaDeReservas;
         listaDeReservas = (ArrayList<ReservaDto>) rdao.readReservasPorPersona(1);
 
@@ -41,7 +43,7 @@ public class PruebaConexion {
         }
         System.out.println("-----------------------------------------------");
 
-        EspacioDao edao = new EspacioDao();
+        
         ArrayList<EspacioDto> listaDeEspacios;
         listaDeEspacios = (ArrayList<EspacioDto>) edao.readEspacios();
 
@@ -61,5 +63,11 @@ public class PruebaConexion {
         }
         
         System.out.println("------------------------------------------");
+        
+        if (rdao.validarCupoDisponible(3, 1)) {
+            System.out.println("ok");
+        } else {
+            System.out.println("okno");
+        }
     }
 }
